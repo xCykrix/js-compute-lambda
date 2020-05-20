@@ -1,0 +1,37 @@
+{
+  "name": "js-super-compute-lambda",
+  "description": "JS Super Compute 'Serverless' LAMBDA Environment for complex calcuation clients.",
+  "license": "SEE .idea/copyright/All_Rights_Reserved.xml",
+  "author": "Amethyst Studio <authority@amethyst.live>",
+  "contributors": [
+    "Samuel Voeller <samuel.voeller@amethyst.live>"
+  ],
+  "homepage": "https://github.com/xCykrix/js-super-compute-lambda",
+  "repository": {
+    "url": "git@github.com:xCykrix/js-super-compute-lambda.git"
+  },
+  "scripts": {
+    "project:upgrade": "yarn install --mutex network && yarn upgrade --latest --mutex network"
+  },
+  "engines": {
+    "node": ">=13.13.0",
+    "npm": "use-yarn",
+    "yarn": ">=1.22.4"
+  },
+  "engineStrict": true,
+  "dependencies": {
+    "ws": "^7.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-json": "^2.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  },
+  "root": true,
+  "private": true
+}
