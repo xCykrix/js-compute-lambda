@@ -3,7 +3,7 @@ const apps = []
 const lowerBound = 8000
 
 const bindings = 2
-const servers = 1
+const servers = 2
 
 function range (size, startAt = 0) {
   return [...Array(size).keys()].map(i => i + startAt)
