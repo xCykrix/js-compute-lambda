@@ -62,7 +62,8 @@ async function dispatch () {
           pending[stack.referenceId] = {
             referenceId: stack.referenceId,
             callback: (fullResponse) => {
-              primes = [...primes, ...fullResponse.answers]
+              fullResponse.answers = fullResponse.answers.filter((check) => { return check.output === true })
+              primes = primes.concat(fullResponse.answers)
             },
             resolve
           }
@@ -102,7 +103,6 @@ setInterval(() => {
     primes.sort((a, b) => {
       return a.input < b.input
     })
-    const results = primes.filter((check) => { return check.output === true })
 
     console.info(`[Finished] ${results.length} out of ${primeUpperBound} matched the expected condition. [${condition}]`)
     console.timeEnd('calculationPeriod')
