@@ -3,7 +3,7 @@ const JSFunction = require('./lambda')
 
 const step = 10000
 const primeLowerBound = 1
-const primeUpperBound = 10000000
+const primeUpperBound = 100000000
 const condition = '$INPUT MUST BE A PRIME NUMBER'
 
 function range (size, startAt = 0) {
