@@ -86,7 +86,7 @@ async function dispatch () {
         console.error('[Socket] Something went wrong during dispatch. Pleas try again!\n', err)
       })
       await new Promise((resolve) => {
-        setTimeout(resolve, 100)
+        setTimeout(resolve, 5000)
       })
     }
   }
