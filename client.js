@@ -31,7 +31,7 @@ let primes = []
 async function dispatch () {
   for (const index in ranges) {
     new Promise((resolve, reject) => {
-      const WSS = new WebSocket(`ws:/${origins[Math.floor(Math.random() * origins.length)]}/:${ports[Math.floor(Math.random() * ports.length)]}/`)
+      const WSS = new WebSocket(`ws://${origins[Math.floor(Math.random() * origins.length)]}:${ports[Math.floor(Math.random() * ports.length)]}/`)
       const selectedRange = ranges[index]
 
       WSS.on('open', () => {
