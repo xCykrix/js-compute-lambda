@@ -1,6 +1,6 @@
 
 # User Generated GitIgnore
-/secrets.json
+secret.json
 
 # Created by https://www.gitignore.io/api/node,notepadpp
 # Edit at https://www.gitignore.io/?templates=node,notepadpp
