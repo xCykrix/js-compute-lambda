@@ -3,7 +3,7 @@ const apps = []
 const lowerBound = 8000
 
 const bindings = 2
-const servers = 2
+const servers = 1
 
 function range (size, startAt = 0) {
   return [...Array(size).keys()].map(i => i + startAt)
@@ -15,7 +15,7 @@ for (const range of ranges) {
     name: `super-computer-${range}`,
     script: 'server.js',
     args: [`${range}`],
-    instances: 2,
+    instances: servers,
     exec_mode: (servers === 1 ? 'fork' : 'cluster')
   })
 }
