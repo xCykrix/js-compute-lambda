@@ -5,14 +5,13 @@ const startPort = 8000
 const bindings = 4
 
 // Settings for Server
-const authenticationHandshake = {
-  'X-Early-Authentication': require('./secret.json')
-}
+const version = '1.0'
 
 // Settings for Client
 const hosts = [
   '127.0.0.1'
 ]
+const maxWorkers = 8
 
 function range (size, startAt = 0) {
   return [...Array(size).keys()].map(i => i + startAt)
@@ -30,7 +29,9 @@ for (const range of ranges) {
 module.exports = {
   startPort,
   bindings,
+  version,
   hosts,
+  maxWorkers,
   ranges,
   apps
 }
