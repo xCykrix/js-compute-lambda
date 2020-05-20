@@ -2,7 +2,7 @@ const apps = []
 
 const lowerBound = 8000
 
-const bindings = 2
+const bindings = 4
 const servers = 1
 
 function range (size, startAt = 0) {
