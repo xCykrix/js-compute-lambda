@@ -72,11 +72,14 @@ async function dispatch () {
         WSS.on('message', (content) => {
           const stack = JSFunction.parse(content)
           if (pending[stack.referenceId]) {
-            pending[stack.referenceId].callback(stack)
-            finished++
-            pending[stack.referenceId].resolve()
+            const restack = new Promise((resolve) => {
+              pending[stack.referenceId].callback(stack)
+              finished++
+              pending[stack.referenceId].resolve()
+              delete pending[stack.referenceId]
+              resolve()
+            })
           }
-          delete pending[stack.referenceId]
           WSS.close()
         })
 
@@ -87,7 +90,7 @@ async function dispatch () {
         console.error('[Socket] Something went wrong during dispatch. Pleas try again!\n', err)
       })
       await new Promise((resolve) => {
-        setTimeout(resolve, 500)
+        setTimeout(resolve, 300)
       })
     }
   }
@@ -104,7 +107,7 @@ setInterval(() => {
       return a.input < b.input
     })
 
-    console.info(`[Finished] ${results.length} out of ${primeUpperBound} matched the expected condition. [${condition}]`)
+    console.info(`[Finished] ${primes.length} out of ${primeUpperBound} matched the expected condition. [${condition}]`)
     console.timeEnd('calculationPeriod')
     // eslint-disable-next-line no-process-exit
     process.exit(0)
