@@ -1,9 +1,9 @@
 const WebSocket = require('ws')
 const JSFunction = require('./lambda')
 
-const step = 1000000
+const step = 5000000
 const primeLowerBound = 1
-const primeUpperBound = 100000000
+const primeUpperBound = 500000000
 const condition = '$INPUT MUST BE A PRIME NUMBER'
 
 function range (size, startAt = 0) {
@@ -50,7 +50,9 @@ async function dispatch () {
               const responses = []
 
               for (const number of numbers) {
-                responses.push({ input: number, output: isPrime(number) })
+                if (isPrime(number)) {
+                  responses.push({ input: number, output: true })
+                }
               }
 
               return responses
@@ -62,7 +64,6 @@ async function dispatch () {
           pending[stack.referenceId] = {
             referenceId: stack.referenceId,
             callback: (fullResponse) => {
-              fullResponse.answers = fullResponse.answers.filter((check) => { return check.output === true })
               primes = primes.concat(fullResponse.answers)
             },
             resolve
@@ -87,7 +88,7 @@ async function dispatch () {
           return reject(err)
         })
       }).catch((err) => {
-        console.error('[Socket] Something went wrong during dispatch. Pleas try again!\n', err)
+        console.error('[Socket] Something went wrong during dispatch. Please try again!\n', err)
       })
       await new Promise((resolve) => {
         setTimeout(resolve, 300)
