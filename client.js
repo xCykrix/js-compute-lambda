@@ -1,7 +1,7 @@
 const WebSocket = require('ws')
 const JSFunction = require('./lambda')
 
-const step = 5000000
+const step = 1000000
 const primeLowerBound = 1
 const primeUpperBound = 500000000
 const condition = '$INPUT MUST BE A PRIME NUMBER'
