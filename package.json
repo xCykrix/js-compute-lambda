@@ -14,7 +14,6 @@
     "project:upgrade": "yarn install --mutex network && yarn upgrade --latest --mutex network"
   },
   "engines": {
-    "node": ">=13.13.0",
     "npm": "use-yarn",
     "yarn": ">=1.22.4"
   },
