@@ -11,87 +11,84 @@ function range (size, startAt = 0) {
 }
 
 console.time('calculationPeriod')
-const ranges = []
-
-for (let i = primeUpperBound; i >= primeLowerBound - 1; i--) {
-  if (((i / step) % 1 === 0 && i !== primeUpperBound) || i === 0) {
-    ranges.push(range(step, i + 1))
-  }
-}
 
 const origins = ['127.0.0.1', '95.216.170.62', '95.216.163.182', '95.216.172.37']
 const ports = require('./ecosystem.config.js').ranges
 
 let dispatched = false
+let streamed = 0
 let finished = 0
 
 const pending = {}
 let primes = []
 
 async function dispatch () {
-  for (const index in ranges) {
-    new Promise((resolve, reject) => {
-      const WSS = new WebSocket(`ws://${origins[Math.floor(Math.random() * origins.length)]}:${ports[Math.floor(Math.random() * ports.length)]}/`)
-      const selectedRange = ranges[index]
+  for (let i = primeUpperBound; i >= primeLowerBound - 1; i--) {
+    if (((i / step) % 1 === 0 && i !== primeUpperBound) || i === 0) {
+      const rangeList = range(step, i + 1)
+      streamed++
 
-      WSS.on('open', () => {
-        const stack = {
-          referenceId: require('crypto').randomBytes(8).toString('hex'),
-          evalPayload: (numbers) => {
-            function isPrime (refNum) {
-              var sqrtnum = Math.floor(Math.sqrt(refNum))
-              var prime = refNum !== 1
-              for (var i = 2; i < sqrtnum + 1; i++) {
-                if (refNum % i === 0) {
-                  prime = false
-                  break
+      new Promise((resolve, reject) => {
+        const WSS = new WebSocket(`ws://${origins[Math.floor(Math.random() * origins.length)]}:${ports[Math.floor(Math.random() * ports.length)]}/`)
+
+        WSS.on('open', () => {
+          const stack = {
+            referenceId: require('crypto').randomBytes(8).toString('hex'),
+            evalPayload: (numbers) => {
+              function isPrime (refNum) {
+                var sqrtnum = Math.floor(Math.sqrt(refNum))
+                var prime = refNum !== 1
+                for (var i = 2; i < sqrtnum + 1; i++) {
+                  if (refNum % i === 0) {
+                    prime = false
+                    break
+                  }
                 }
+                return prime
               }
-              return prime
-            }
 
-            const responses = []
+              const responses = []
 
-            for (const number of numbers) {
-              responses.push({ input: number, output: isPrime(number) })
-            }
+              for (const number of numbers) {
+                responses.push({ input: number, output: isPrime(number) })
+              }
 
-            return responses
-          },
-          evalParams: [selectedRange]
-        }
-        WSS.send(JSFunction.stringify(stack))
+              return responses
+            },
+            evalParams: [rangeList]
+          }
+          WSS.send(JSFunction.stringify(stack))
 
-        pending[stack.referenceId] = {
-          referenceId: stack.referenceId,
-          callback: (fullResponse) => {
-            primes = [...primes, ...fullResponse.answers]
-          },
-          resolve
-        }
+          pending[stack.referenceId] = {
+            referenceId: stack.referenceId,
+            callback: (fullResponse) => {
+              primes = [...primes, ...fullResponse.answers]
+            },
+            resolve
+          }
+        })
+
+        WSS.on('message', (content) => {
+          const stack = JSFunction.parse(content)
+          if (pending[stack.referenceId]) {
+            pending[stack.referenceId].callback(stack)
+            finished++
+            pending[stack.referenceId].resolve()
+          }
+          delete pending[stack.referenceId]
+          WSS.close()
+        })
+
+        WSS.on('error', (err) => {
+          return reject(err)
+        })
+      }).catch((err) => {
+        console.error('[Socket] Something went wrong during dispatch. Pleas try again!\n', err)
       })
-
-      WSS.on('message', (content) => {
-        const stack = JSFunction.parse(content)
-        if (pending[stack.referenceId]) {
-          pending[stack.referenceId].callback(stack)
-          finished++
-          pending[stack.referenceId].resolve()
-        }
-        delete pending[stack.referenceId]
-        WSS.close()
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1)
       })
-
-      WSS.on('error', (err) => {
-        return reject(err)
-      })
-    }).catch((err) => {
-      console.error('[Socket] Something went wrong during dispatch. Pleas try again!\n', err)
-    })
-
-    await new Promise((resolve) => {
-      setTimeout(resolve, 1)
-    })
+    }
   }
   dispatched = true
 }
@@ -112,5 +109,5 @@ setInterval(() => {
     // eslint-disable-next-line no-process-exit
     process.exit(0)
   }
-  console.info(`[%] ${finished}/${ranges.length} of calculations complete. [${condition}]`)
+  console.info(`[%] ${finished}/${streamed} of calculations complete. [${condition}]`)
 }, 100)
