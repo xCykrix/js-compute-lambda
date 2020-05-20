@@ -12,7 +12,7 @@ function range (size, startAt = 0) {
 
 console.time('calculationPeriod')
 
-const origins = ['127.0.0.1', '95.216.170.62', '95.216.163.182', '95.216.172.37']
+const origins = ['95.216.170.62', '95.216.163.182', '95.216.172.37']
 const ports = require('./ecosystem.config.js').ranges
 
 let dispatched = false
