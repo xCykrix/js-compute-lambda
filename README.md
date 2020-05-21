@@ -7,7 +7,12 @@ Dispatch stateless functions to remote workers that will evaluate complex expres
 ```sh
   $: npm install -g pm2
   $: git clone https://github.com/xCykrix/js-super-compute-lambda
-  $: 
+  $: cd ./js-super-compute-lambda
+  $: npm install && npm upgrade
+  $: pm2 start ecosystem.config.js # Must be ran on host machine, unless configured otherwise, and all workers.
+```
+
+Thats it! You have downloaded and got the client and server ready! You can take a look right below to see how to start the example client.
 
 ## Implementation(s)
 
